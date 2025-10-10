@@ -15,9 +15,9 @@ app.get("/", (req, res) => {
   res.send("Home Page for API");
 });
 
-// const booksRouter = require("./routes/books");
+const booksRouter = require("./routes/books");
 
-// app.use("/api/books", booksRouter);
+app.use("/api/books", booksRouter);
 
 app.listen(PORT, () => {
   console.log(`Express server running at http://localhost:${PORT}/`);

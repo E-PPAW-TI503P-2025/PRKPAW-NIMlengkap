@@ -1,9 +1,12 @@
 const express = require("express");
 const router = express.Router();
 
+// Data Array Buku
 let books = [
   { id: 1, title: "Book 1", author: "Author 1" },
   { id: 2, title: "Book 2", author: "Author 2" },
+  { id: 3, title: "Book 3", author: "Author 3" },
+  { id: 4, title: "Book 4", author: "Author 4" },
 ];
 
 router.get("/", (req, res) => {
@@ -13,6 +16,7 @@ router.get("/", (req, res) => {
 router.get("/:id", (req, res) => {
   const book = books.find((b) => b.id === parseInt(req.params.id));
   if (!book) return res.status(404).send("Book not found");
+
   res.json(book);
 });
 

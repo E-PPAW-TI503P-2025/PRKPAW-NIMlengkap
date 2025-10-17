@@ -34,4 +34,29 @@ router.post("/", (req, res) => {
   res.status(201).json(book);
 });
 
+// PUT
+router.put("/:id", (req, res) => {
+  const book = books.find((b) => b.id === parseInt(req.params.id));
+  if (!book) return res.status(404).send("Book not found");
+
+  const { title, author } = req.body;
+  if (!title || !author) {
+    return res.status(400).json({ message: "Title and author are required" });
+  }
+
+  book.title = title;
+  book.author = author;
+  res.json(book);
+});
+
+// DELETE
+router.delete("/:id", (req, res) => {
+  const bookIndex = books.findIndex((b) => b.id === parseInt(req.params.id));
+  if (bookIndex === -1) return res.status(404).send("Book not found");
+
+  const [deletedBook] = books.splice(bookIndex, 1);
+
+  res.json(deletedBook);
+});
+
 module.exports = router;

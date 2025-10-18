@@ -5,6 +5,7 @@ const timeZone = "Asia/Jakarta";
 exports.CheckIn = (req, res) => {
   const { id: userId, nama: userName } = req.user;
   const waktuSekarang = new Date();
+
   const existingRecord = presensiRecords.find(
     (record) => record.userId === userId && record.checkOut === null
   );
@@ -36,6 +37,7 @@ exports.CheckIn = (req, res) => {
       "HH:mm:ss",
       { timeZone }
     )} WIB`,
+
     data: formattedData,
   });
 };
@@ -52,6 +54,7 @@ exports.CheckOut = (req, res) => {
       message: "Tidak ditemukan catatan check-in yang aktif untuk Anda.",
     });
   }
+
   recordToUpdate.checkOut = waktuSekarang;
 
   const formattedData = {

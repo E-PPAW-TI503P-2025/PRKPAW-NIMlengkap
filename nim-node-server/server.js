@@ -25,7 +25,7 @@ const ruteBuku = require("./routes/books");
 
 app.use("/api/books", ruteBuku);
 
-app.use("/api/presensi", presensiRoutes);
+app.use("/api/attendance", presensiRoutes);
 app.use("/api/reports", reportRoutes);
 
 app.listen(PORT, () => {

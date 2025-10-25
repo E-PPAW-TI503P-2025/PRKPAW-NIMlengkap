@@ -7,7 +7,7 @@ Tampilan endpoint update:
 ![Tampilan Endpoint Create](ss/endpoin_create.png)
 
 Tampilan Endpoint Create Book:
-![Tampilan Endpoint Create](ss/endpoin_create.png)
+![Tampilan Endpoint Create](ss/ssan.png)
 
 Tampilan endpoint update:
 ![Tampilan Endpoint Create](ss/endpoin_create.png)

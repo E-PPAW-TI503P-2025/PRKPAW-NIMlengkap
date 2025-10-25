@@ -16,7 +16,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      checkin: {
+      checkIn: {
         type: Sequelize.DATE,
         allowNull: false,
       },
@@ -24,7 +24,6 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: true,
       },
-
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

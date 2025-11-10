@@ -1,15 +1,13 @@
-// 1. Ganti sumber data dari array ke model Sequelize
-const { Presensi } = require("../models");
+const { Presensi, User } = require("../models");
 const { format } = require("date-fns-tz");
 const timeZone = "Asia/Jakarta";
 
 exports.CheckIn = async (req, res) => {
-  // 2. Gunakan try...catch untuk error handling
   try {
+    // Ambil 'id' dan 'nama' dari TOKEN (req.user), bukan dari body
     const { id: userId, nama: userName } = req.user;
     const waktuSekarang = new Date();
 
-    // 3. Ubah cara mencari data menggunakan 'findOne' dari Sequelize
     const existingRecord = await Presensi.findOne({
       where: { userId: userId, checkOut: null },
     });
@@ -20,22 +18,12 @@ exports.CheckIn = async (req, res) => {
         .json({ message: "Anda sudah melakukan check-in hari ini." });
     }
 
-    // 4. Ubah cara membuat data baru menggunakan 'create' dari Sequelize
+    // Buat data baru HANYA dengan userId
+    // Kita tidak perlu menyimpan 'nama' di tabel Presensis
     const newRecord = await Presensi.create({
-      userId: userId,
-      nama: userName,
+      userId: userId, // <-- Diambil dari token
       checkIn: waktuSekarang,
     });
-
-    // Formatting data untuk respons tetap sama
-    const formattedData = {
-      userId: newRecord.userId,
-      nama: newRecord.nama,
-      checkIn: format(newRecord.checkIn, "yyyy-MM-dd HH:mm:ssXXX", {
-        timeZone,
-      }),
-      checkOut: null,
-    };
 
     res.status(201).json({
       message: `Halo ${userName}, check-in Anda berhasil pada pukul ${format(
@@ -43,7 +31,7 @@ exports.CheckIn = async (req, res) => {
         "HH:mm:ss",
         { timeZone }
       )} WIB`,
-      data: formattedData,
+      data: newRecord,
     });
   } catch (error) {
     res
@@ -53,12 +41,10 @@ exports.CheckIn = async (req, res) => {
 };
 
 exports.CheckOut = async (req, res) => {
-  // Gunakan try...catch
   try {
     const { id: userId, nama: userName } = req.user;
     const waktuSekarang = new Date();
 
-    // Cari data di database
     const recordToUpdate = await Presensi.findOne({
       where: { userId: userId, checkOut: null },
     });
@@ -69,29 +55,17 @@ exports.CheckOut = async (req, res) => {
       });
     }
 
-    // 5. Update dan simpan perubahan ke database
     recordToUpdate.checkOut = waktuSekarang;
     await recordToUpdate.save();
 
-    // Formatting data untuk respons tetap sama
-    const formattedData = {
-      userId: recordToUpdate.userId,
-      nama: recordToUpdate.nama,
-      checkIn: format(recordToUpdate.checkIn, "yyyy-MM-dd HH:mm:ssXXX", {
-        timeZone,
-      }),
-      checkOut: format(recordToUpdate.checkOut, "yyyy-MM-dd HH:mm:ssXXX", {
-        timeZone,
-      }),
-    };
-
+    // Kirim data yang sudah di-update
     res.json({
       message: `Selamat jalan ${userName}, check-out Anda berhasil pada pukul ${format(
         waktuSekarang,
         "HH:mm:ss",
         { timeZone }
       )} WIB`,
-      data: formattedData,
+      data: recordToUpdate, // Kirim data yang sudah di-update
     });
   } catch (error) {
     res
@@ -129,12 +103,12 @@ exports.updatePresensi = async (req, res) => {
   try {
     const presensiId = req.params.id;
 
-    const { checkIn, checkOut, nama } = req.body;
+    const { checkIn, checkOut } = req.body;
 
-    if (checkIn === undefined && checkOut === undefined && nama === undefined) {
+    if (checkIn === undefined && checkOut === undefined) {
       return res.status(400).json({
         message:
-          "Request body tidak berisi data yang valid untuk diupdate (checkIn, checkOut, atau nama).",
+          "Request body tidak berisi data yang valid untuk diupdate (checkIn atau checkOut).",
       });
     }
 
@@ -148,7 +122,7 @@ exports.updatePresensi = async (req, res) => {
 
     recordToUpdate.checkIn = checkIn || recordToUpdate.checkIn;
     recordToUpdate.checkOut = checkOut || recordToUpdate.checkOut;
-    recordToUpdate.nama = nama || recordToUpdate.nama;
+    // recordToUpdate.nama = nama || recordToUpdate.nama;
 
     await recordToUpdate.save();
 

@@ -4,7 +4,6 @@ const timeZone = "Asia/Jakarta";
 
 exports.CheckIn = async (req, res) => {
   try {
-    // Ambil 'id' dan 'nama' dari TOKEN (req.user), bukan dari body
     const { id: userId, nama: userName } = req.user;
     const waktuSekarang = new Date();
 
@@ -17,11 +16,8 @@ exports.CheckIn = async (req, res) => {
         .status(400)
         .json({ message: "Anda sudah melakukan check-in hari ini." });
     }
-
-    // Buat data baru HANYA dengan userId
-    // Kita tidak perlu menyimpan 'nama' di tabel Presensis
     const newRecord = await Presensi.create({
-      userId: userId, // <-- Diambil dari token
+      userId: userId,
       checkIn: waktuSekarang,
     });
 

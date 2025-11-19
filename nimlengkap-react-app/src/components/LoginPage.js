@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
@@ -78,17 +79,19 @@ function LoginPage() {
           >
             Login
           </button>
-
-          <div>
-            <p>belum register?</p>
-            <a href="/register" className="text-blue-600 hover:underline">
-              Register disini
-            </a>
-          </div>
         </form>
         {error && (
           <p className="text-red-600 text-sm mt-4 text-center">{error}</p>
         )}
+        <p className="mt-4 text-center text-sm text-gray-600">
+          Belum punya akun?{" "}
+          <Link
+            to="/register"
+            className="font-medium text-blue-600 hover:text-blue-500"
+          >
+            Registrasi di sini
+          </Link>
+        </p>
       </div>
     </div>
   );

@@ -6,12 +6,8 @@ function ReportPage() {
   const [reports, setReports] = useState([]);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-
-  // --- BARU ---
-  // 1. Buat state baru untuk menyimpan apa yang diketik pengguna
   const [searchTerm, setSearchTerm] = useState("");
 
-  // 2. Ubah fetchReports agar bisa menerima query pencarian
   const fetchReports = async (query) => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -26,31 +22,26 @@ function ReportPage() {
         },
       };
 
-      // 3. Bangun URL dengan query pencarian
-      // Jika 'query' ada, tambahkan '?nama=...'. Jika tidak, panggil URL biasa.
       const baseUrl = "http://localhost:3001/api/reports/daily";
       const url = query ? `${baseUrl}?nama=${query}` : baseUrl;
 
       const response = await axios.get(url, config);
       setReports(response.data.data);
-      setError(null); // Bersihkan error jika pencarian berhasil
+      setError(null);
     } catch (err) {
-      setReports([]); // Kosongkan data jika error
+      setReports([]);
       setError(
         err.response ? err.response.data.message : "Gagal mengambil data"
       );
     }
   };
 
-  // 4. useEffect sekarang hanya memuat data awal saat halaman dibuka
   useEffect(() => {
-    fetchReports(""); // Panggil tanpa query untuk memuat semua data
-  }, [navigate]); // Dependency [navigate] sudah benar
-
-  // 5. Buat fungsi handler untuk form pencarian
+    fetchReports("");
+  }, [navigate]);
   const handleSearchSubmit = (e) => {
-    e.preventDefault(); // Mencegah form me-refresh halaman
-    fetchReports(searchTerm); // Panggil fetchReports dengan isi dari state searchTerm
+    e.preventDefault();
+    fetchReports(searchTerm);
   };
 
   return (
@@ -59,7 +50,6 @@ function ReportPage() {
         Laporan Presensi Harian
       </h1>
 
-      {/* --- BARU: Form Pencarian --- */}
       <form onSubmit={handleSearchSubmit} className="mb-6 flex space-x-2">
         <input
           type="text"
@@ -75,7 +65,6 @@ function ReportPage() {
           Cari
         </button>
       </form>
-      {/* --- Akhir Form Pencarian --- */}
 
       {error && (
         <p className="text-red-600 bg-red-100 p-4 rounded-md mb-4">{error}</p>
@@ -84,7 +73,6 @@ function ReportPage() {
       {!error && (
         <div className="bg-white shadow-md rounded-lg overflow-hidden">
           <table className="min-w-full divide-y divide-gray-200">
-            {/* ... (thead Anda tetap sama) ... */}
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -95,6 +83,12 @@ function ReportPage() {
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Check-Out
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Latitude
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Longitude
                 </th>
               </tr>
             </thead>
@@ -116,6 +110,12 @@ function ReportPage() {
                             timeZone: "Asia/Jakarta",
                           })
                         : "Belum Check-Out"}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {presensi.latitude || "N/A"}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {presensi.longitude || "N/A"}
                     </td>
                   </tr>
                 ))

@@ -6,6 +6,7 @@ import DashboardPage from "./components/DashboardPage";
 import AttendancePage from "./components/AttendancePage";
 import ReportPage from "./components/ReportPage";
 import Navbar from "./components/Navbar";
+import "leaflet/dist/leaflet.css";
 
 const MainLayout = ({ children }) => {
   return (
@@ -15,6 +16,7 @@ const MainLayout = ({ children }) => {
     </div>
   );
 };
+
 function App() {
   return (
     <Router>

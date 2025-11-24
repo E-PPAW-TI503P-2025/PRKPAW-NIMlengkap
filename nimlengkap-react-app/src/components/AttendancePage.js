@@ -25,19 +25,17 @@ function AttendancePage() {
   const [isLoading, setIsLoading] = useState(true);
 
   const [image, setImage] = useState(null); // State untuk menyimpan hasil foto
-  const webcamRef = useRef(null); // Referensi ke elemen kamera
+  const webcamRef = useRef(null);
 
-  // Fungsi Capture Foto
   const capture = useCallback(() => {
     const imageSrc = webcamRef.current.getScreenshot();
-    setImage(imageSrc); // imageSrc adalah string Base64
+    setImage(imageSrc);
   }, [webcamRef]);
 
   const getToken = () => {
     return localStorage.getItem("token");
   };
 
-  // Fungsi untuk mendapatkan lokasi pengguna
   const getLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -69,16 +67,13 @@ function AttendancePage() {
     }
 
     try {
-      // 1. Konversi Base64 ke File (Blob) agar bisa dikirim sebagai FormData
       const blob = await (await fetch(image)).blob();
 
-      // 2. Buat FormData
       const formData = new FormData();
       formData.append("latitude", coords.lat);
       formData.append("longitude", coords.lng);
-      formData.append("image", blob, "selfie.jpg"); // 'image' harus sama dengan di backend multer
+      formData.append("image", blob, "selfie.jpg");
 
-      // 3. Kirim Request (Header Content-Type otomatis diurus axios)
       const response = await axios.post(
         "http://localhost:3001/api/attendance/check-in",
         formData,
@@ -144,10 +139,8 @@ function AttendancePage() {
 
       <div className="my-4 border rounded-lg overflow-hidden bg-black">
         {image ? (
-          // Jika sudah foto, tampilkan preview hasil
           <img src={image} alt="Selfie" className="w-full" />
         ) : (
-          // Jika belum, tampilkan webcam
           <Webcam
             audio={false}
             ref={webcamRef}
@@ -157,21 +150,20 @@ function AttendancePage() {
         )}
       </div>
 
-      {/* Tombol Capture / Retake */}
       <div className="mb-4">
         {!image ? (
           <button
             onClick={capture}
             className="bg-blue-500 text-white px-4 py-2 rounded w-full"
           >
-            Ambil Foto 📸
+            Ambil Foto
           </button>
         ) : (
           <button
             onClick={() => setImage(null)}
             className="bg-gray-500 text-white px-4 py-2 rounded w-full"
           >
-            Foto Ulang 🔄
+            Foto Ulang
           </button>
         )}
       </div>

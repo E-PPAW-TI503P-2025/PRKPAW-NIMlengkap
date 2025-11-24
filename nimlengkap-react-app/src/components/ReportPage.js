@@ -7,6 +7,7 @@ function ReportPage() {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const fetchReports = async (query) => {
     const token = localStorage.getItem("token");
@@ -42,6 +43,13 @@ function ReportPage() {
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     fetchReports(searchTerm);
+  };
+
+  const getImageUrl = (path) => {
+    if (!path) return null;
+    // Ganti backslash (\) jadi slash (/) jika ada (untuk support path Windows)
+    const cleanPath = path.replace(/\\/g, "/");
+    return `http://localhost:3001/${cleanPath}`;
   };
 
   return (
@@ -90,6 +98,9 @@ function ReportPage() {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Longitude
                 </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Bukti Foto
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -117,6 +128,20 @@ function ReportPage() {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {presensi.longitude || "N/A"}
                     </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {presensi.buktiFoto ? (
+                        <img
+                          src={getImageUrl(presensi.buktiFoto)}
+                          alt="Bukti"
+                          className="h-10 w-10 rounded-full object-cover cursor-pointer border hover:border-blue-500"
+                          onClick={() =>
+                            setSelectedImage(getImageUrl(presensi.buktiFoto))
+                          }
+                        />
+                      ) : (
+                        <span className="text-xs text-gray-400">Tidak ada</span>
+                      )}
+                    </td>
                   </tr>
                 ))
               ) : (
@@ -131,6 +156,28 @@ function ReportPage() {
               )}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {selectedImage && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
+          onClick={() => setSelectedImage(null)} // Klik di luar foto untuk tutup
+        >
+          <div className="relative max-w-3xl w-full">
+            <button
+              className="absolute -top-10 right-0 text-white text-xl font-bold hover:text-gray-300"
+              onClick={() => setSelectedImage(null)}
+            >
+              Tutup [X]
+            </button>
+            <img
+              src={selectedImage}
+              alt="Bukti Full"
+              className="w-full h-auto rounded-lg shadow-2xl border-2 border-white"
+              onClick={(e) => e.stopPropagation()} // Mencegah klik foto menutup modal
+            />
+          </div>
         </div>
       )}
     </div>

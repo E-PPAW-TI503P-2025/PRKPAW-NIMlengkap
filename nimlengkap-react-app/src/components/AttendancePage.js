@@ -1,6 +1,6 @@
-// src/components/PresensiPage.js
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import axios from "axios";
+import Webcam from "react-webcam";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import icon from "leaflet/dist/images/marker-icon.png";
@@ -23,6 +23,15 @@ function AttendancePage() {
 
   const [coords, setCoords] = useState(null); // {lat, lng}
   const [isLoading, setIsLoading] = useState(true);
+
+  const [image, setImage] = useState(null); // State untuk menyimpan hasil foto
+  const webcamRef = useRef(null); // Referensi ke elemen kamera
+
+  // Fungsi Capture Foto
+  const capture = useCallback(() => {
+    const imageSrc = webcamRef.current.getScreenshot();
+    setImage(imageSrc); // imageSrc adalah string Base64
+  }, [webcamRef]);
 
   const getToken = () => {
     return localStorage.getItem("token");
@@ -54,26 +63,26 @@ function AttendancePage() {
   }, []);
 
   const handleCheckIn = async () => {
-    // if (!coords) {
-    //   setError("Lokasi belum didapatkan. Mohon izinkan akses lokasi.");
-    //   return;
-    // }
-    setError("");
-    try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${getToken()}`,
-        },
-      };
+    if (!coords || !image) {
+      setError("Lokasi dan Foto wajib ada!");
+      return;
+    }
 
+    try {
+      // 1. Konversi Base64 ke File (Blob) agar bisa dikirim sebagai FormData
+      const blob = await (await fetch(image)).blob();
+
+      // 2. Buat FormData
+      const formData = new FormData();
+      formData.append("latitude", coords.lat);
+      formData.append("longitude", coords.lng);
+      formData.append("image", blob, "selfie.jpg"); // 'image' harus sama dengan di backend multer
+
+      // 3. Kirim Request (Header Content-Type otomatis diurus axios)
       const response = await axios.post(
         "http://localhost:3001/api/attendance/check-in",
-        // Kirim data lokasi bersama request
-        {
-          // latitude: coords.lat,
-          // longitude: coords.lng,
-        },
-        config
+        formData,
+        { headers: { Authorization: `Bearer ${getToken()}` } }
       );
 
       setMessage(response.data.message);
@@ -105,7 +114,7 @@ function AttendancePage() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center pt-10 pb-10">
-      {/* {isLoading ? (
+      {isLoading ? (
         <div className="bg-white p-10 rounded-lg shadow-md w-full max-w-6xl mb-8 text-center">
           <p className="text-xl font-semibold text-blue-600 animate-pulse">
             Memuat Peta dan Mendeteksi Lokasi...
@@ -131,7 +140,42 @@ function AttendancePage() {
             </MapContainer>
           </div>
         </div>
-      )} */}
+      )}
+
+      <div className="my-4 border rounded-lg overflow-hidden bg-black">
+        {image ? (
+          // Jika sudah foto, tampilkan preview hasil
+          <img src={image} alt="Selfie" className="w-full" />
+        ) : (
+          // Jika belum, tampilkan webcam
+          <Webcam
+            audio={false}
+            ref={webcamRef}
+            screenshotFormat="image/jpeg"
+            className="w-full"
+          />
+        )}
+      </div>
+
+      {/* Tombol Capture / Retake */}
+      <div className="mb-4">
+        {!image ? (
+          <button
+            onClick={capture}
+            className="bg-blue-500 text-white px-4 py-2 rounded w-full"
+          >
+            Ambil Foto 📸
+          </button>
+        ) : (
+          <button
+            onClick={() => setImage(null)}
+            className="bg-gray-500 text-white px-4 py-2 rounded w-full"
+          >
+            Foto Ulang 🔄
+          </button>
+        )}
+      </div>
+
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md text-center">
         <h2 className="text-3xl font-bold mb-6 text-gray-800">
           Lakukan Presensi

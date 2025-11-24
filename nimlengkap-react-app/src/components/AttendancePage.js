@@ -54,11 +54,11 @@ function AttendancePage() {
   }, []);
 
   const handleCheckIn = async () => {
-    if (!coords) {
-      setError("Lokasi belum didapatkan. Mohon izinkan akses lokasi.");
-      return;
-    }
-
+    // if (!coords) {
+    //   setError("Lokasi belum didapatkan. Mohon izinkan akses lokasi.");
+    //   return;
+    // }
+    setError("");
     try {
       const config = {
         headers: {
@@ -70,8 +70,8 @@ function AttendancePage() {
         "http://localhost:3001/api/attendance/check-in",
         // Kirim data lokasi bersama request
         {
-          latitude: coords.lat,
-          longitude: coords.lng,
+          // latitude: coords.lat,
+          // longitude: coords.lng,
         },
         config
       );
@@ -105,7 +105,7 @@ function AttendancePage() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center pt-10 pb-10">
-      {isLoading ? (
+      {/* {isLoading ? (
         <div className="bg-white p-10 rounded-lg shadow-md w-full max-w-6xl mb-8 text-center">
           <p className="text-xl font-semibold text-blue-600 animate-pulse">
             Memuat Peta dan Mendeteksi Lokasi...
@@ -131,7 +131,7 @@ function AttendancePage() {
             </MapContainer>
           </div>
         </div>
-      )}
+      )} */}
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md text-center">
         <h2 className="text-3xl font-bold mb-6 text-gray-800">
           Lakukan Presensi

@@ -6,7 +6,7 @@ exports.CheckIn = async (req, res) => {
   try {
     const { id: userId, nama: userName } = req.user;
     const waktuSekarang = new Date();
-    const { latitude, longitude } = req.body;
+    // const { latitude, longitude } = req.body;
 
     const existingRecord = await Presensi.findOne({
       where: { userId: userId, checkOut: null },
@@ -20,8 +20,6 @@ exports.CheckIn = async (req, res) => {
     const newRecord = await Presensi.create({
       userId: userId,
       checkIn: waktuSekarang,
-      latitude: latitude,
-      longitude: longitude,
     });
 
     res.status(201).json({

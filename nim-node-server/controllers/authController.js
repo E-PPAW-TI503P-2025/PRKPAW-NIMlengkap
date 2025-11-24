@@ -7,7 +7,6 @@ const { User } = require("../models");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-// Tentukan Kunci Rahasia Anda di sini (Simpan di .env di aplikasi nyata)
 const JWT_SECRET = process.env.JWT_SECRET;
 
 // --- FUNGSI REGISTRASI ---

@@ -30,11 +30,11 @@ module.exports = (sequelize, DataTypes) => {
       },
       latitude: {
         type: DataTypes.DECIMAL(10, 7),
-        allowNull: true,
+        allowNull: false,
       },
       longitude: {
         type: DataTypes.DECIMAL(10, 7),
-        allowNull: true,
+        allowNull: false,
       },
     },
     {

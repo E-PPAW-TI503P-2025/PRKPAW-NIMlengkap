@@ -6,7 +6,7 @@ exports.CheckIn = async (req, res) => {
   try {
     const { id: userId, nama: userName } = req.user;
     const waktuSekarang = new Date();
-    // const { latitude, longitude } = req.body;
+    const { latitude, longitude } = req.body;
 
     const existingRecord = await Presensi.findOne({
       where: { userId: userId, checkOut: null },
@@ -20,6 +20,8 @@ exports.CheckIn = async (req, res) => {
     const newRecord = await Presensi.create({
       userId: userId,
       checkIn: waktuSekarang,
+      latitude: latitude || null,
+      longitude: longitude || null,
     });
 
     res.status(201).json({
@@ -55,14 +57,13 @@ exports.CheckOut = async (req, res) => {
     recordToUpdate.checkOut = waktuSekarang;
     await recordToUpdate.save();
 
-    // Kirim data yang sudah di-update
     res.json({
       message: `Selamat jalan ${userName}, check-out Anda berhasil pada pukul ${format(
         waktuSekarang,
         "HH:mm:ss",
         { timeZone }
       )} WIB`,
-      data: recordToUpdate, // Kirim data yang sudah di-update
+      data: recordToUpdate,
     });
   } catch (error) {
     res

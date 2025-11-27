@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Presensi.belongsTo(models.User, {
-        foreignKey: "userId", // Pastikan kolom ini ada di migrasi Anda
+        foreignKey: "userId",
         as: "user",
       });
     }

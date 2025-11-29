@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Presensi.belongsTo(models.User, {
-        foreignKey: "userId", // Pastikan kolom ini ada di migrasi Anda
+        foreignKey: "userId",
         as: "user",
       });
     }
@@ -30,11 +30,11 @@ module.exports = (sequelize, DataTypes) => {
       },
       latitude: {
         type: DataTypes.DECIMAL(10, 7),
-        allowNull: true,
+        allowNull: false,
       },
       longitude: {
         type: DataTypes.DECIMAL(10, 7),
-        allowNull: true,
+        allowNull: false,
       },
       buktiFoto: {
         type: DataTypes.STRING,

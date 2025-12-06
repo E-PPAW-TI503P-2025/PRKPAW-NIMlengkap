@@ -5,9 +5,11 @@ exports.testConnection = (req, res) => {
 };
 
 exports.receiveSensorData = (req, res) => {
-  const { suhu, kelembaban } = req.body;
+  const { suhu, kelembaban, cahaya } = req.body;
 
-  console.log(`🔥 [LOG SENSOR] Suhu: ${suhu}°C | Kelembaban: ${kelembaban}%`);
+  console.log(
+    `🔥 [LOG] Suhu: ${suhu}°C | Lembab: ${kelembaban}% | Cahaya: ${cahaya}`
+  );
 
-  res.status(200).json({ status: "diterima", message: "Data sensor masuk!" });
+  res.status(200).json({ status: "diterima" });
 };

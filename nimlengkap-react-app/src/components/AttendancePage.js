@@ -61,7 +61,6 @@ function AttendancePage() {
   }, []);
 
   const handleCheckIn = async () => {
-
     if (!coords || !image) {
       setError("Lokasi dan Foto wajib ada!");
       return;
@@ -80,7 +79,6 @@ function AttendancePage() {
 
         formData,
         { headers: { Authorization: `Bearer ${getToken()}` } }
-
       );
 
       setMessage(response.data.message);
@@ -140,7 +138,6 @@ function AttendancePage() {
         </div>
       )}
 
-
       <div className="my-4 border rounded-lg overflow-hidden bg-black">
         {image ? (
           <img src={image} alt="Selfie" className="w-full" />
@@ -171,7 +168,6 @@ function AttendancePage() {
           </button>
         )}
       </div>
-
 
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md text-center">
         <h2 className="text-3xl font-bold mb-6 text-gray-800">

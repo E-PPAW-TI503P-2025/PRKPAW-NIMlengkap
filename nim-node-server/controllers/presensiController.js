@@ -6,7 +6,7 @@ const path = require("path");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/"); // Simpan di folder uploads
+    cb(null, "uploads/");
   },
   filename: (req, file, cb) => {
     // Format nama file: userId-timestamp.jpg
@@ -14,7 +14,6 @@ const storage = multer.diskStorage({
   },
 });
 
-// Filter hanya gambar
 const fileFilter = (req, file, cb) => {
   if (file.mimetype.startsWith("image/")) {
     cb(null, true);
@@ -23,7 +22,6 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-// Inisialisasi upload middleware
 exports.upload = multer({ storage: storage, fileFilter: fileFilter });
 
 exports.CheckIn = async (req, res) => {
@@ -32,15 +30,12 @@ exports.CheckIn = async (req, res) => {
     const waktuSekarang = new Date();
 
     const { latitude, longitude } = req.body;
-    const buktiFoto = req.file ? req.file.path : null;
 
-   
-
+    const buktiFoto = req.file ? req.file.path : null; //path foto
 
     const existingRecord = await Presensi.findOne({
       where: { userId: userId, checkOut: null },
     });
-
     if (existingRecord) {
       return res
         .status(400)

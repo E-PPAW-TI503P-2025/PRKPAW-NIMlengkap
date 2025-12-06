@@ -5,7 +5,7 @@ const cors = require("cors");
 const app = express();
 const PORT = 3001;
 const morgan = require("morgan");
-const path = require("path"); //
+const path = require("path"); //ini
 
 // Impor router
 const presensiRoutes = require("./routes/presensi");
@@ -13,8 +13,12 @@ const reportRoutes = require("./routes/reports");
 
 const authRoutes = require("./routes/auth"); // <-- Impor rute auth
 
+
+app.use("/uploads", express.static(path.join(__dirname, "uploads"))); //ini
+
 // --- TAMBAHKAN BARIS INI ---
 const iotRoutes = require("./routes/iot");
+
 
 // Middleware
 app.use(cors());

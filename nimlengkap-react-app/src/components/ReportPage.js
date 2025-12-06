@@ -101,6 +101,9 @@ function ReportPage() {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Bukti Foto
                 </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Action
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -141,6 +144,57 @@ function ReportPage() {
                       ) : (
                         <span className="text-xs text-gray-400">Tidak ada</span>
                       )}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <div className="mb-2">
+                        <button
+                          onClick={() =>
+                            alert(
+                              `Detail Presensi:\n\nNama: ${
+                                presensi.user ? presensi.user.nama : "N/A"
+                              }\nCheck-In: ${new Date(
+                                presensi.checkIn
+                              ).toLocaleString("id-ID", {
+                                timeZone: "Asia/Jakarta",
+                              })}\nCheck-Out: ${
+                                presensi.checkOut
+                                  ? new Date(presensi.checkOut).toLocaleString(
+                                      "id-ID",
+                                      {
+                                        timeZone: "Asia/Jakarta",
+                                      }
+                                    )
+                                  : "Belum Check-Out"
+                              }\nLatitude: ${
+                                presensi.latitude || "N/A"
+                              }\nLongitude: ${presensi.longitude || "N/A"}`
+                            )
+                          }
+                          className="text-blue-600 hover:text-blue-900 font-semibold"
+                        >
+                          Lihat Detail
+                        </button>
+                      </div>
+                      <div>
+                        <button
+                          onClick={() =>
+                            navigate(`/edit-presensi/${presensi.id}`)
+                          }
+                          className="text-green-600 hover:text-green-900 font-semibold"
+                        >
+                          Edit Presensi
+                        </button>
+                      </div>
+                      <div>
+                        <button
+                          onClick={() =>
+                            navigate(`/delete-presensi/${presensi.id}`)
+                          }
+                          className="text-red-600 hover:text-red-900 font-semibold"
+                        >
+                          Hapus Presensi
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))

@@ -10,6 +10,7 @@ router.post(
   [authenticateToken, presensiController.upload.single("image")],
   presensiController.CheckIn
 );
+
 router.post("/check-out", presensiController.CheckOut);
 
 router.put("/:id", presensiController.updatePresensi);

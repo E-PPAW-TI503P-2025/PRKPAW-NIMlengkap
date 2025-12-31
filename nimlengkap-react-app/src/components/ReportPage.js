@@ -7,6 +7,7 @@ function ReportPage() {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const fetchReports = async (query) => {
     const token = localStorage.getItem("token");
@@ -42,6 +43,13 @@ function ReportPage() {
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     fetchReports(searchTerm);
+  };
+
+  const getImageUrl = (path) => {
+    if (!path) return null;
+    // Ganti backslash (\) jadi slash (/) jika ada (untuk support path Windows)
+    const cleanPath = path.replace(/\\/g, "/");
+    return `http://localhost:3001/${cleanPath}`;
   };
 
   return (
@@ -90,6 +98,12 @@ function ReportPage() {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Longitude
                 </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Bukti Foto
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Action
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -117,6 +131,71 @@ function ReportPage() {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {presensi.longitude || "N/A"}
                     </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {presensi.buktiFoto ? (
+                        <img
+                          src={getImageUrl(presensi.buktiFoto)}
+                          alt="Bukti"
+                          className="h-10 w-10 rounded-full object-cover cursor-pointer border hover:border-blue-500"
+                          onClick={() =>
+                            setSelectedImage(getImageUrl(presensi.buktiFoto))
+                          }
+                        />
+                      ) : (
+                        <span className="text-xs text-gray-400">Tidak ada</span>
+                      )}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <div className="mb-2">
+                        <button
+                          onClick={() =>
+                            alert(
+                              `Detail Presensi:\n\nNama: ${
+                                presensi.user ? presensi.user.nama : "N/A"
+                              }\nCheck-In: ${new Date(
+                                presensi.checkIn
+                              ).toLocaleString("id-ID", {
+                                timeZone: "Asia/Jakarta",
+                              })}\nCheck-Out: ${
+                                presensi.checkOut
+                                  ? new Date(presensi.checkOut).toLocaleString(
+                                      "id-ID",
+                                      {
+                                        timeZone: "Asia/Jakarta",
+                                      }
+                                    )
+                                  : "Belum Check-Out"
+                              }\nLatitude: ${
+                                presensi.latitude || "N/A"
+                              }\nLongitude: ${presensi.longitude || "N/A"}`
+                            )
+                          }
+                          className="text-blue-600 hover:text-blue-900 font-semibold"
+                        >
+                          Lihat Detail
+                        </button>
+                      </div>
+                      <div>
+                        <button
+                          onClick={() =>
+                            navigate(`/edit-presensi/${presensi.id}`)
+                          }
+                          className="text-green-600 hover:text-green-900 font-semibold"
+                        >
+                          Edit Presensi
+                        </button>
+                      </div>
+                      <div>
+                        <button
+                          onClick={() =>
+                            navigate(`/delete-presensi/${presensi.id}`)
+                          }
+                          className="text-red-600 hover:text-red-900 font-semibold"
+                        >
+                          Hapus Presensi
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                 ))
               ) : (
@@ -131,6 +210,28 @@ function ReportPage() {
               )}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {selectedImage && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
+          onClick={() => setSelectedImage(null)} // Klik di luar foto untuk tutup
+        >
+          <div className="relative max-w-3xl w-full">
+            <button
+              className="absolute -top-10 right-0 text-white text-xl font-bold hover:text-gray-300"
+              onClick={() => setSelectedImage(null)}
+            >
+              Tutup [X]
+            </button>
+            <img
+              src={selectedImage}
+              alt="Bukti Full"
+              className="w-full h-auto rounded-lg shadow-2xl border-2 border-white"
+              onClick={(e) => e.stopPropagation()} // Mencegah klik foto menutup modal
+            />
+          </div>
         </div>
       )}
     </div>

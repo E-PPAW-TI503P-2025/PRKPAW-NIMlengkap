@@ -4,6 +4,7 @@ import LoginPage from "./components/LoginPage";
 import RegisterPage from "./components/RegisterPage";
 import DashboardPage from "./components/DashboardPage";
 import AttendancePage from "./components/AttendancePage";
+import SensorLogs from "./components/DashboardIoT";
 import ReportPage from "./components/ReportPage";
 import Navbar from "./components/Navbar";
 import "leaflet/dist/leaflet.css";
@@ -37,6 +38,14 @@ function App() {
             element={
               <MainLayout>
                 <AttendancePage />
+              </MainLayout>
+            }
+          />
+          <Route
+            path="/SensorLogs"
+            element={
+              <MainLayout>
+                <SensorLogs />
               </MainLayout>
             }
           />

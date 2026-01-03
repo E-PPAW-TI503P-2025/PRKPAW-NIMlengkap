@@ -80,6 +80,15 @@ function Navbar() {
                 Laporan Admin
               </Link>
             )}
+            <Link
+              to="/monitoring"
+              onClick={() => setMobileMenuOpen(false)}
+              className={`block px-6 py-3 rounded-full font-medium ${
+                isActive("/monitoring") ? activeClass : "text-gray-700"
+              }`}
+            >
+              Monitoring Suhu
+            </Link>
           </div>
 
           {/* Desktop User + Logout */}
@@ -158,6 +167,15 @@ function Navbar() {
                 Laporan Admin
               </Link>
             )}
+            <Link
+              to="/monitoring"
+              onClick={() => setMobileMenuOpen(false)}
+              className={`block px-6 py-3 rounded-full font-medium ${
+                isActive("/monitoring") ? activeClass : "text-gray-700"
+              }`}
+            >
+              Monitoring Suhu
+            </Link>
 
             <button
               onClick={handleLogout}

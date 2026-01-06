@@ -24,10 +24,12 @@ exports.receiveSensorData = async (req, res) => {
 
 exports.getSensorHistory = async (req, res) => {
   try {
+
     const data = await SensorLog.findAll({
       limit: 50,
       order: [["createdAt", "DESC"]],
     });
+
     const formattedData = data.reverse();
 
     res.json({
